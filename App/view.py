@@ -34,10 +34,35 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+# Prints iniciales
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- ")
+
+def printEspacio():
+    """
+    añade espacios entre funciones 
+    """
+
+    print("")
+    print("=" * 100)
+    print("")
+
+# carga de datos
+
+def initCatalog(datatype):
+    """
+    Inicializa el catalogo de obras
+    """
+    return controller.initCatalog(datatype)
+
+def loadData(catalog):
+    """
+    Carga las obras en la estructura de datos
+    """
+    controller.loadData(catalog)
 
 catalog = None
 
@@ -46,9 +71,22 @@ Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
+    inputs = input('Seleccione una opción para continuar: ')
     if int(inputs[0]) == 1:
+
+        printEspacio()
         print("Cargando información de los archivos ....")
+        datatype=''
+
+        catalog=initCatalog(datatype)
+        print("Creado el catalogo")
+        loadData(catalog)
+        print("Se cargaron los datos al catalogo")
+        print(catalog["artworks"])
+        print(catalog["artists"])
+        print(catalog["artistID"])
+
+        printEspacio()
 
     elif int(inputs[0]) == 2:
         pass
