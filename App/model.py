@@ -31,6 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.DataStructures import mapstructure as ms
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as mrgsort
 assert cf
 import datetime
 import time
@@ -50,9 +51,18 @@ def newCatalog(datatype):
 
     catalog={'artworks': None, 'artists': None, "artistID" : None}
 
-    catalog['artworks']=ms.newMap(300, 307, 'PROBING', 16, None)
-    catalog['artists']=ms.newMap(100, 101, 'PROBING', 6, None)
-    catalog['artistID']=ms.newMap(100, 101, 'PROBING', 2, None)
+    catalog['artworks']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    catalog['artists']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    catalog['artistID']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
 
     return catalog
 
@@ -65,7 +75,7 @@ def addArtwork(catalog,artwork):
     artwork['Department'],artwork['CreditLine'],artwork['Classification'], artwork['Circumference (cm)'],artwork['Depth (cm)'],artwork['Diameter (cm)'],
     artwork['Height (cm)'],artwork['Length (cm)'],artwork['Weight (kg)'],artwork['Width (cm)'])
 
-    ms.put(catalog['artworks'], artwork['Title'], new)
+    mp.put(catalog['artworks'], artwork['Title'], new)
     
 
 
@@ -73,8 +83,8 @@ def addArtist(catalog,artist):
     #Se adiciona el artista  a la lista de artistas
     new=newArtist(artist['DisplayName'],artist['BeginDate'],artist['EndDate'],artist['Nationality'],artist['Gender'],artist['ConstituentID'])
 
-    ms.put(catalog['artists'], artist['DisplayName'], new)
-    ms.put(catalog['artistID'], artist['ConstituentID'], artist['DisplayName'])
+    mp.put(catalog['artists'], artist['DisplayName'], new)
+    mp.put(catalog['artistID'], artist['ConstituentID'], artist['DisplayName'])
 
 # Funciones para creacion de datos
 
@@ -137,6 +147,39 @@ def newArtist(name,begindate,enddate,nationality,gender,constituentid):
 
 # Funciones de consulta
 
+def ObrasAntiguasMedio(medio,catalog): 
+
+    retorno=lt.newList()
+    obras=catalog['artworks']
+    Obras=mp.valueSet(obras)
+    
+    print(f'Hay {lt.size(Obras)} Obras')
+    print(f'Hay {mp.size(obras)} obras catalog')
+    for x in range(lt.size(Obras)): 
+        Elto=lt.getElement(Obras,x)
+        
+        Medio=Elto['medium']
+        Fecha=Elto['date']
+        Titulo=Elto['name']
+       
+
+        if Medio.lower()==medio.lower():
+            lt.addLast(retorno,{'medium':Medio,'date':Fecha,'name':Titulo})
+
+    mrgsort.sort(retorno,cmpbydate)
+
+    return retorno
+
+
+
+
+
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+def cmpbydate(Obra1,Obra2): 
+
+    return Obra1['date']<Obra2['date']

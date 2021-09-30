@@ -69,4 +69,11 @@ def loadArtists(catalog):
 
 # Funciones de ordenamiento
 
+def ObrasAntiguasMedio(medio,catalog): 
+    if medio=='':
+        print('INGRESE UN MEDIO ADECUADO')
+    else:
+        return model.ObrasAntiguasMedio(medio,catalog)
+
+
 # Funciones de consulta sobre el catálogo

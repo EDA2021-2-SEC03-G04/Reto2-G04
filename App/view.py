@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import mapstructure as ms
+from DISClib.ADT import map as mp
 assert cf
 
 
@@ -39,7 +41,7 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Mostrar n obras más antiguas para un medio específico")
 
 def printEspacio():
     """
@@ -49,6 +51,26 @@ def printEspacio():
     print("")
     print("=" * 100)
     print("")
+
+def printObrasAntiguasMedio(lista,n,medio): 
+    print()
+    
+
+    print(f'Hay {min(lt.size(lista),n)} obras con medio {medio}')
+
+    print()
+    print()
+
+    print(f'El top {min(lt.size(lista),n)} de obras más antiguas es: ')
+    print()
+    print()
+    for i in range(min(lt.size(lista),n)): 
+        Elto=lt.getElement(lista,i)
+        Medio=Elto['medium']
+        Fecha=Elto['date']
+        Titulo=Elto['name']
+        print(f'{i+1}) La obra: {Titulo}, con fecha: {Fecha}, y medio: {Medio}')
+    printEspacio()
 
 # carga de datos
 
@@ -82,14 +104,16 @@ while True:
         print("Creado el catalogo")
         loadData(catalog)
         print("Se cargaron los datos al catalogo")
-        print(catalog["artworks"])
-        print(catalog["artists"])
-        print(catalog["artistID"])
+        print(f'Se cargaron {mp.size(catalog["artworks"])} obras y {mp.size(catalog["artists"])} artistas')
+
 
         printEspacio()
 
     elif int(inputs[0]) == 2:
-        pass
+        medio=input('Ingrese el medio a buscar:  ')
+        n=input('Ingrese la cantidad de obras más viejas a buscar:  ')
+        retorno=controller.ObrasAntiguasMedio(medio,catalog)
+        printObrasAntiguasMedio(retorno,int(n),medio)
 
     else:
         sys.exit(0)
