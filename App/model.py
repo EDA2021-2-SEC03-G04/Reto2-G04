@@ -49,7 +49,7 @@ def newCatalog(datatype):
     todas las obras, adicionalmente, crea una lista vacia para los artistas.Retorna el catalogo inicializado.
     """
 
-    catalog={'artworks': None, 'artists': None, "artistID" : None}
+    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None}
 
     catalog['artworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -60,6 +60,11 @@ def newCatalog(datatype):
                                    loadfactor=4.0,
                                    comparefunction=None)
     catalog['artistID']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+
+    catalog['nationality']=mp.newMap(10000,
                                    maptype='CHAINING',
                                    loadfactor=4.0,
                                    comparefunction=None)
@@ -85,6 +90,7 @@ def addArtist(catalog,artist):
 
     mp.put(catalog['artists'], artist['DisplayName'], new)
     mp.put(catalog['artistID'], artist['ConstituentID'], artist['DisplayName'])
+    mp.put(catalog['nationality'],artist['Nationality'],artist['ConstiuentID'])
 
 # Funciones para creacion de datos
 
