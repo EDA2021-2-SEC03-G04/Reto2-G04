@@ -49,7 +49,7 @@ def newCatalog(datatype):
     todas las obras, adicionalmente, crea una lista vacia para los artistas.Retorna el catalogo inicializado.
     """
 
-    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None}
+    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None}
 
     catalog['artworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -69,6 +69,11 @@ def newCatalog(datatype):
                                    loadfactor=4.0,
                                    comparefunction=None)
 
+    catalog['medium']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -81,6 +86,10 @@ def addArtwork(catalog,artwork):
     artwork['Height (cm)'],artwork['Length (cm)'],artwork['Weight (kg)'],artwork['Width (cm)'])
 
     mp.put(catalog['artworks'], artwork['Title'], new)
+    mp.put(catalog['medium'],artwork['Medium'],new)
+
+
+   
     
 
 

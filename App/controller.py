@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+import time
 
 
 """
@@ -45,9 +46,13 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    
+    StartTime=time.process_time()
     loadArtworks(catalog)
     loadArtists(catalog)
+    StopTime=time.process_time()
+    TimeMseg=(StopTime-StartTime)*1000
+
+    print(f'La carga de datos tardó {TimeMseg} miliseg')
 
 def loadArtworks(catalog):
     """
