@@ -65,13 +65,13 @@ def newCatalog(datatype):
                                    comparefunction=None)
 
     catalog['nationality']=mp.newMap(10000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0,
+                                   maptype='PROBING',
+                                   loadfactor=0.8,
                                    comparefunction=None)
 
     catalog['medium']=mp.newMap(10000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0,
+                                   maptype='PROBING',
+                                   loadfactor=0.8,
                                    comparefunction=None)
     catalog['nationalityartworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -221,13 +221,18 @@ def ObrasAntiguasMedio(medio,catalog):
     return retorno
 
 def ObrasPorNacionalidad(nacionalidad,catalog): 
+    print()
+    print('Hay ' + str(lt.size(mp.keySet(catalog['nationalityartworks']))) + ' nacionalidades distintas')
+    print()
+
+
 
     if mp.contains(catalog['nationalityartworks'],nacionalidad):
 
         return lt.size(mp.get(catalog['nationalityartworks'],nacionalidad)['value'])
     else:
         return 0
-
+        
 
     
 

@@ -109,10 +109,13 @@ while True:
         datatype=''
 
         catalog=initCatalog(datatype)
-        print("Creado el catalogo")
+        print("Creando el catalogo")
         loadData(catalog)
         print("Se cargaron los datos al catalogo")
         print(f'Se cargaron {mp.size(catalog["artworks"])} obras y {mp.size(catalog["artists"])} artistas')
+        print()
+        print('Hay ' + str(lt.size(mp.keySet(catalog['medium']))) + ' medios distintos')
+
 
 
         printEspacio()
@@ -128,6 +131,7 @@ while True:
         retorno=controller.ObrasPorNacionalidad(nacionalidad,catalog)
         printObrasNacionalidad(retorno,nacionalidad)
 
+        
     else:
         sys.exit(0)
 sys.exit(0)
