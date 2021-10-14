@@ -49,7 +49,7 @@ def newCatalog(datatype):
     todas las obras, adicionalmente, crea una lista vacia para los artistas.Retorna el catalogo inicializado.
     """
 
-    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None}
+    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None,'nationalityartworks':None}
 
     catalog['artworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -73,6 +73,10 @@ def newCatalog(datatype):
                                    maptype='CHAINING',
                                    loadfactor=4.0,
                                    comparefunction=None)
+    catalog['nationalityartworks']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
 
     return catalog
 
@@ -89,8 +93,39 @@ def addArtwork(catalog,artwork):
     mp.put(catalog['medium'],artwork['Medium'],new)
 
 
-   
+
+
+    #Crea el diccionario de Obras por nacionalidad
+    Iden = artwork['ConstituentID']
+    Iden = Iden.translate({ord(i): None for i in '[]'})
+    Iden = Iden.split(',')
+    Iden=Iden[0]
+
     
+
+    Nationality1=mp.get(catalog['artistID'],Iden)
+
+
+
+
+    Nationality=Nationality1['value']['nationality']
+
+
+
+    if mp.contains(catalog['nationalityartworks'],Nationality): 
+        listavieja=mp.get(catalog['nationalityartworks'],Nationality)
+        lt.addLast(listavieja['value'],new)
+        mp.put(catalog['nationalityartworks'],Nationality,listavieja['value'])
+
+        
+    
+    else: 
+        lista=lt.newList()
+        lt.addLast(lista,new)
+        mp.put(catalog['nationalityartworks'],Nationality,lista)
+
+
+
 
 
 def addArtist(catalog,artist): 
@@ -98,8 +133,8 @@ def addArtist(catalog,artist):
     new=newArtist(artist['DisplayName'],artist['BeginDate'],artist['EndDate'],artist['Nationality'],artist['Gender'],artist['ConstituentID'])
 
     mp.put(catalog['artists'], artist['DisplayName'], new)
-    mp.put(catalog['artistID'], artist['ConstituentID'], artist['DisplayName'])
-    mp.put(catalog['nationality'],artist['Nationality'],artist['ConstiuentID'])
+    mp.put(catalog['artistID'], artist['ConstituentID'], new)
+    mp.put(catalog['nationality'],artist['Nationality'],artist['ConstituentID'])
 
 # Funciones para creacion de datos
 
@@ -184,6 +219,19 @@ def ObrasAntiguasMedio(medio,catalog):
     mrgsort.sort(retorno,cmpbydate)
 
     return retorno
+
+def ObrasPorNacionalidad(nacionalidad,catalog): 
+
+    if mp.contains(catalog['nationalityartworks'],nacionalidad):
+
+        return lt.size(mp.get(catalog['nationalityartworks'],nacionalidad)['value'])
+    else:
+        return 0
+
+
+    
+
+
 
 
 

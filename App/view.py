@@ -42,6 +42,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Mostrar n obras más antiguas para un medio específico")
+    print('3- Buscar la cantidad de obras de una nacionalidad')
 
 def printEspacio():
     """
@@ -71,6 +72,13 @@ def printObrasAntiguasMedio(lista,n,medio):
         Titulo=Elto['name']
         print(f'{i+1}) La obra: {Titulo}, con fecha: {Fecha}, y medio: {Medio}')
     printEspacio()
+
+def printObrasNacionalidad(tamaño,nacionalidad):
+    print()
+    print(f'Hay {tamaño} obras de la nacionalidad {nacionalidad}')
+    print()
+
+
 
 # carga de datos
 
@@ -114,6 +122,11 @@ while True:
         n=input('Ingrese la cantidad de obras más viejas a buscar:  ')
         retorno=controller.ObrasAntiguasMedio(medio,catalog)
         printObrasAntiguasMedio(retorno,int(n),medio)
+
+    elif int(inputs[0])==3:
+        nacionalidad= input('Ingrese la nacionalidad a buscar:  ')
+        retorno=controller.ObrasPorNacionalidad(nacionalidad,catalog)
+        printObrasNacionalidad(retorno,nacionalidad)
 
     else:
         sys.exit(0)

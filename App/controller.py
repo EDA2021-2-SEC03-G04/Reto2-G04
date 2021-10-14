@@ -47,21 +47,14 @@ def loadData(catalog):
     estructura de datos
     """
     StartTime=time.process_time()
-    loadArtworks(catalog)
     loadArtists(catalog)
+    loadArtworks(catalog)
     StopTime=time.process_time()
     TimeMseg=(StopTime-StartTime)*1000
 
     print(f'La carga de datos tardó {TimeMseg} miliseg')
 
-def loadArtworks(catalog):
-    """
-    Carga las obras de arte del archivo.  .
-    """
-    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
-    input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
-    for artwork in input_file:
-        model.addArtwork(catalog, artwork)
+
 
 def loadArtists(catalog):
     """
@@ -72,6 +65,15 @@ def loadArtists(catalog):
     for artist in input_file:
         model.addArtist(catalog, artist)
 
+def loadArtworks(catalog):
+    """
+    Carga las obras de arte del archivo.  .
+    """
+    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
+    input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
+    for artwork in input_file:
+        model.addArtwork(catalog, artwork)
+
 # Funciones de ordenamiento
 
 def ObrasAntiguasMedio(medio,catalog): 
@@ -79,6 +81,10 @@ def ObrasAntiguasMedio(medio,catalog):
         print('INGRESE UN MEDIO ADECUADO')
     else:
         return model.ObrasAntiguasMedio(medio,catalog)
+
+def ObrasPorNacionalidad(nacionalidad,catalog):
+
+   return model.ObrasPorNacionalidad(nacionalidad,catalog)
 
 
 # Funciones de consulta sobre el catálogo
