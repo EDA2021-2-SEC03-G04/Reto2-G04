@@ -43,6 +43,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Mostrar n obras más antiguas para un medio específico")
     print('3- Buscar la cantidad de obras de una nacionalidad')
+    print('4-(REQ1) Buscar la cantidad de obras de una nacionalidad')
 
 def printEspacio():
     """
@@ -77,6 +78,23 @@ def printObrasNacionalidad(tamaño,nacionalidad):
     print()
     print(f'Hay {tamaño} obras de la nacionalidad {nacionalidad}')
     print()
+
+def printArtistasCrono(lista):
+
+    printEspacio()
+    cantidad = lt.size(lista)
+    print("Hay " + str(cantidad) + " artistas en el rago seleccioando")
+    print()
+    print("Top 3 mas viejos: ")
+    for x in range(3):
+        elemento = lt.getElement(lista, x)
+        print(str(x+1) + ") el artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
+
+    print()
+    print("Top 3 mas viejos: ")
+    for x in range(3):
+        elemento = lt.getElement(lista, cantidad - x)
+        print(str(x+1) + ") el artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
 
 
 
@@ -130,6 +148,24 @@ while True:
         nacionalidad= input('Ingrese la nacionalidad a buscar:  ')
         retorno=controller.ObrasPorNacionalidad(nacionalidad,catalog)
         printObrasNacionalidad(retorno,nacionalidad)
+
+
+    elif int(inputs[0]) == 4:
+
+        printEspacio()
+        Año_inicial = int(input("Desde que año quieres buscar?:  "))
+        Año_fin = int(input("Hasta que año quieres buscar?:  "))
+        
+        
+        
+        cantidadArtistas = controller.artistasCronologico(catalog, Año_inicial, Año_fin)
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 1 ' + '='*20)
+        print()
+        
+        printArtistasCrono(cantidadArtistas) 
+        printEspacio()
 
         
     else:

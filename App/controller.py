@@ -89,3 +89,10 @@ def ObrasPorNacionalidad(nacionalidad,catalog):
 
 
 # Funciones de consulta sobre el catálogo
+
+def artistasCronologico(lista, inicio, final):
+    """
+    Retorna los artistas que nacieron enre las dos fechas
+    """
+    ArtistasCrono = model.artistasCronologico(lista, inicio, final)
+    return ArtistasCrono

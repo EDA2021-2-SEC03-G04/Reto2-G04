@@ -234,6 +234,36 @@ def ObrasPorNacionalidad(nacionalidad,catalog):
         return 0
         
 
+def artistasCronologico(lista, inicio, final):
+    """
+    Retorna una lista con los artistas ordenados por epoca
+    """
+
+    artistas = lista["artists"]
+    llaves = mp.keySet(artistas)
+    retorno = lt.newList()
+
+
+    for x in range(lt.size(llaves)):
+
+        grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
+        edad = int(grupo["begindate"])
+        
+
+        if edad != 0 and edad != None and edad >= inicio and edad <= final:
+
+            nombre = grupo["name"]
+            muerte = int(grupo["enddate"])
+            genero = grupo["gender"]
+            nacionalidad = grupo["nationality"]
+            
+            agregar = {"nombre" : nombre, "edad" : edad, "muerte" : muerte, "genero" : genero, "nacionalidad" : nacionalidad}
+            lt.addLast(retorno, agregar)
+    
+    mrgsort.sort(retorno, compArtistasByBegindate)
+
+    return retorno
+
     
 
 
@@ -251,3 +281,9 @@ def ObrasPorNacionalidad(nacionalidad,catalog):
 def cmpbydate(Obra1,Obra2): 
 
     return Obra1['date']<Obra2['date']
+
+def compArtistasByBegindate(art1, art2):
+    """
+    compara artistas por su fecha de nacmiento 
+    """
+    return art1["edad"] < art2["edad"]
