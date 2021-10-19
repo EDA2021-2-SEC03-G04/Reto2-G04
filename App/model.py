@@ -36,6 +36,7 @@ assert cf
 import datetime
 import time
 
+
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
@@ -78,6 +79,13 @@ def newCatalog(datatype):
                                    loadfactor=4.0,
                                    comparefunction=None)
 
+    catalog['artworksIDSingleArtist']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    
+    
+
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -90,9 +98,6 @@ def addArtwork(catalog,artwork):
     artwork['Height (cm)'],artwork['Length (cm)'],artwork['Weight (kg)'],artwork['Width (cm)'])
 
     mp.put(catalog['artworks'], artwork['Title'], new)
-    mp.put(catalog['medium'],artwork['Medium'],new)
-
-
 
 
     #Crea el diccionario de Obras por nacionalidad
@@ -116,6 +121,8 @@ def addArtwork(catalog,artwork):
         listavieja=mp.get(catalog['nationalityartworks'],Nationality)
         lt.addLast(listavieja['value'],new)
         mp.put(catalog['nationalityartworks'],Nationality,listavieja['value'])
+        #print(type(listavieja['value']))
+        #print(listavieja['value'])
 
         
     
@@ -123,6 +130,56 @@ def addArtwork(catalog,artwork):
         lista=lt.newList()
         lt.addLast(lista,new)
         mp.put(catalog['nationalityartworks'],Nationality,lista)
+        #print(type(lista))
+        #print(lista)
+        
+
+
+    #Crea el diccionario de Obras por Medio
+    Medio=artwork['Medium']
+
+    if mp.contains(catalog['medium'],Medio):
+        listavieja=mp.get(catalog['medium'],Medio)
+        lt.addLast(listavieja['value'],new)
+        mp.put(catalog['medium'],Medio,listavieja['value'])
+    else: 
+        lista=lt.newList()
+        lt.addLast(lista,new)
+        mp.put(catalog['medium'],Medio,lista)
+
+
+    Iden = artwork['ConstituentID']
+    Iden = Iden.translate({ord(i): None for i in '[]'})
+    Iden = Iden.split(',')
+
+    #Crea un diccionario con las llaves del ID de artistas y con value todas las obras en la que ese artista participa
+    i=0
+    for ArtistID in Iden: 
+        #print(Iden)
+        #print(ArtistID)
+        i=i+1
+        if mp.contains(catalog['artworksIDSingleArtist'],ArtistID): 
+            listavieja2=mp.get(catalog['artworksIDSingleArtist'],ArtistID)
+            #print(type(listavieja2['value']))
+            lt.addLast(listavieja2['value'],new)
+            mp.put(catalog['artworksIDSingleArtist'],ArtistID,listavieja2['value'])
+            
+
+        
+    
+        else: 
+            lista2=lt.newList()
+            #print(type(lista2))
+            lt.addLast(lista2,new)
+            mp.put(catalog['artworksIDSingleArtist'],ArtistID,lista2)
+            #print(lista)
+            #print(type(lista2))
+            #print(i)
+            
+
+
+
+    
 
 
 
@@ -135,6 +192,8 @@ def addArtist(catalog,artist):
     mp.put(catalog['artists'], artist['DisplayName'], new)
     mp.put(catalog['artistID'], artist['ConstituentID'], new)
     mp.put(catalog['nationality'],artist['Nationality'],artist['ConstituentID'])
+
+
 
 # Funciones para creacion de datos
 
@@ -263,6 +322,96 @@ def artistasCronologico(lista, inicio, final):
     mrgsort.sort(retorno, compArtistasByBegindate)
 
     return retorno
+
+def ObrasArtista(catalog,nombre): 
+
+    #Saca los indices de artistas y artistsID
+    Artistas=catalog['artists']
+    #Obtiene el constituend ID del artista
+    IDArtistamap=mp.get(Artistas,nombre)['value']
+    IDArtista=IDArtistamap['constituentid']
+
+    #print(IDArtista)
+
+    #TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTecnica=controller.ObrasArtista()
+
+    Obras=mp.get(catalog['artworksIDSingleArtist'],IDArtista)['value']
+    #print(type(Obras))
+    #print()
+    #print()
+    #print(Obras)
+    ObrasLista=Obras
+    #print(type(ObrasLista))
+    #print(ObrasLista)
+    #print()
+    
+
+    TotalObras=len(ObrasLista)
+
+
+    ObrasArtistaTecnica=lt.newList()
+
+    Tecnicas={}
+
+    for i in range(len(ObrasLista)): 
+        Obra=lt.getElement(ObrasLista,i)
+        #print(Obra)
+        #print(type(Obra))
+        #print( )
+        #print(Obra.keys())
+        TecnicaObra=Obra['medium']
+        Tecnicas[TecnicaObra]=Tecnicas.get(i, 0) + 1
+        
+    
+    TotalTecnicas=len(Tecnicas)
+    if TotalTecnicas==0:
+        maxim=0
+        TecnicaMasUsada='No hay suficiente información'
+    else: 
+        maxim=max(Tecnicas.values())
+        TecnicaMasUsada=str(list(Tecnicas.keys())[list(Tecnicas.values()).index(maxim)])
+
+    
+    #Crea la lista de obras del artista con la técnica más usada
+    for i in range(lt.size(ObrasLista)):
+        Obra=lt.getElement(ObrasLista,i) 
+        if Obra['medium']==TecnicaMasUsada:
+            lt.addLast(ObrasArtistaTecnica,Obra)
+
+
+    #TotalObras=len(list(dict.fromkeys(ObrasLista)))
+    TotalObras=lt.size(ObrasLista)
+     
+    ObrasArtistaTecnica2=list(dict.fromkeys(ObrasArtistaTecnica))
+
+    return TotalObras,TotalTecnicas-1,TecnicaMasUsada, ObrasArtistaTecnica,ObrasArtistaTecnica2
+
+
+        
+
+
+
+   
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    return True
+
 
     
 

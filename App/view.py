@@ -43,7 +43,9 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Mostrar n obras más antiguas para un medio específico")
     print('3- Buscar la cantidad de obras de una nacionalidad')
-    print('4-(REQ1) Buscar la cantidad de obras de una nacionalidad')
+    print('4-(REQ1) Listar cronológicamente los artistas')
+    print('5-....')
+    print('6- Clasificar las obras de un artista por técnica')
 
 def printEspacio():
     """
@@ -88,14 +90,34 @@ def printArtistasCrono(lista):
     print("Top 3 mas viejos: ")
     for x in range(3):
         elemento = lt.getElement(lista, x)
-        print(str(x+1) + ") el artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
+        print(str(x+1) + ") El artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
 
     print()
     print("Top 3 mas viejos: ")
     for x in range(3):
         elemento = lt.getElement(lista, cantidad - x)
-        print(str(x+1) + ") el artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
+        print(str(x+1) + ") El artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
 
+
+def printObrasPorTecnica(TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTecnica,nombre,ObrasArtistaTecnica2): 
+    
+    if TecnicaMasUsada=='': 
+        TecnicaMasUsada='No hay suficiente información '
+
+    if TotalTecnicas==-1:
+        TotalTecnicas=0
+
+        
+    print('El artista  ' + str(nombre) + ' Tiene un total de  ' + str(TotalObras) + ' obras  y un total de ' + str(TotalTecnicas) + ' distintas   técnicas utilizadas \n \n')
+    print('La técnica más utilizada por '+ str(nombre) + ' es: ' + str(TecnicaMasUsada))
+    print()
+
+    print('Obras con la técnica más utilizada: ')
+    print()
+    for i in range(lt.size(ObrasArtistaTecnica)): 
+        elemento=lt.getElement(ObrasArtistaTecnica,i)
+        print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + 'y técnica : ' + str(elemento['medium']))
+    printEspacio()
 
 
 # carga de datos
@@ -167,6 +189,18 @@ while True:
         printArtistasCrono(cantidadArtistas) 
         printEspacio()
 
+    elif int(inputs[0])==6: 
+        nombre = input("Qué artista desea consultar ?: ")
+        print()
+        
+        TotalObras,TotalTecincas,TecnicaMasUsada,ObrasArtistaTecnica,ObrasArtistaTecnica2=controller.ObrasArtista(catalog,nombre)
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 3 ' + '='*20)
+        print()
+        
+        printObrasPorTecnica(TotalObras,TotalTecincas,TecnicaMasUsada,ObrasArtistaTecnica,nombre,ObrasArtistaTecnica2)
+       
         
     else:
         sys.exit(0)

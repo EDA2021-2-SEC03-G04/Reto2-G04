@@ -75,6 +75,7 @@ def loadArtworks(catalog):
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
 
+
 # Funciones de ordenamiento
 
 def ObrasAntiguasMedio(medio,catalog): 
@@ -96,3 +97,12 @@ def artistasCronologico(lista, inicio, final):
     """
     ArtistasCrono = model.artistasCronologico(lista, inicio, final)
     return ArtistasCrono
+
+def ObrasArtista(catalog,nombre): 
+    """
+    Retorna las obras de un artista
+    """
+    if nombre=='':
+        print('ERROR, INGRESE UN NOMBRE DE ARTISTA VALIDO ')
+    else:
+        return model.ObrasArtista(catalog, nombre)
