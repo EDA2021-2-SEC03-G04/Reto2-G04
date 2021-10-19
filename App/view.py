@@ -114,8 +114,13 @@ def printObrasPorTecnica(TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTe
 
     print('Obras con la técnica más utilizada: ')
     print()
-    for i in range(lt.size(ObrasArtistaTecnica)): 
-        elemento=lt.getElement(ObrasArtistaTecnica,i)
+    for i in range(len(ObrasArtistaTecnica2)): 
+       # elemento=lt.getElement(ObrasArtistaTecnica2,i)
+        #print('OOOOOOOO')
+        #print(ObrasArtistaTecnica2)
+        elemento=ObrasArtistaTecnica2[i]
+        #print('AAAAA   ')
+        #print(elemento)
         print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + 'y técnica : ' + str(elemento['medium']))
     printEspacio()
 

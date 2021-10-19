@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import addLast
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -349,8 +350,7 @@ def ObrasArtista(catalog,nombre):
     TotalObras=len(ObrasLista)
 
 
-    ObrasArtistaTecnica=lt.newList()
-
+    ObrasArtistaTecnica=[]
     Tecnicas={}
 
     for i in range(len(ObrasLista)): 
@@ -376,13 +376,33 @@ def ObrasArtista(catalog,nombre):
     for i in range(lt.size(ObrasLista)):
         Obra=lt.getElement(ObrasLista,i) 
         if Obra['medium']==TecnicaMasUsada:
-            lt.addLast(ObrasArtistaTecnica,Obra)
+            ObrasArtistaTecnica.append(Obra)
 
 
     #TotalObras=len(list(dict.fromkeys(ObrasLista)))
     TotalObras=lt.size(ObrasLista)
-     
-    ObrasArtistaTecnica2=list(dict.fromkeys(ObrasArtistaTecnica))
+    #print('YYYYYY')
+    #print(type(ObrasArtistaTecnica))
+    #ObrasArtistaTecnica2=list(set(ObrasArtistaTecnica))
+
+
+    seen = set()
+    ObrasArtistaTecnica2 = []
+    for d in ObrasArtistaTecnica:
+        t = tuple(sorted(d.items()))
+        if t not in seen:
+            seen.add(t)
+            ObrasArtistaTecnica2.append(d)
+
+    
+
+   # print(ObrasArtistaTecnica)
+    #print(type(ObrasArtistaTecnica))
+    #print('AAAAAAAAAA POR QUÉ NO FUNCIONA')
+    
+
+    
+
 
     return TotalObras,TotalTecnicas-1,TecnicaMasUsada, ObrasArtistaTecnica,ObrasArtistaTecnica2
 
