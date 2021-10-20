@@ -44,7 +44,7 @@ def printMenu():
     print("2- Mostrar n obras más antiguas para un medio específico")
     print('3- Buscar la cantidad de obras de una nacionalidad')
     print('4-(REQ1) Listar cronológicamente los artistas')
-    print('5-....')
+    print('5- Listar cronológicamente las adquisiciones')
     print('6- Clasificar las obras de un artista por técnica')
 
 def printEspacio():
@@ -97,6 +97,32 @@ def printArtistasCrono(lista):
     for x in range(3):
         elemento = lt.getElement(lista, cantidad - x)
         print(str(x+1) + ") El artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
+
+
+
+def printObrasCronoacq(lista):
+    """
+    imprime la cantidad de obras adquiridas en un rango de años
+    """
+    cantidad = lt.size(lista)
+    
+    print("Hay " + str(cantidad) + " obras adquiridas en el rago seleccioando")
+    print()
+    print("Top 3 mas jovenes: ")
+    print()
+    for x in range(3):
+        elemento = lt.getElement(lista, x)
+        print(str(x+1) + ") la obra: " + elemento["name"] + " adquirida en : " + str(elemento["dateacquired"]) + " con medio: " + elemento["medium"] + " y de dimensiones: " +  elemento["dimensions"] +' creada por: ' + str(elemento['artistname']))
+        
+
+    print()
+    print("Top 3 mas viejos: ")
+    print()
+    for x in range(3):
+        elemento = lt.getElement(lista, cantidad-x)
+        print(str(x+1) + ") la obra: " + elemento["name"] + " adquirida en : " + str(elemento["dateacquired"]) + " con medio: " + elemento["medium"] + " y de dimensiones: " +  elemento["dimensions"]+ 'creada por: ' + str(elemento['artistname']))
+
+
 
 
 def printObrasPorTecnica(TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTecnica,nombre,ObrasArtistaTecnica2): 
@@ -193,6 +219,22 @@ while True:
         
         printArtistasCrono(cantidadArtistas) 
         printEspacio()
+
+    elif int(inputs[0]) == 5:
+        FechaInicial = input("desde que fecha quieres buscar?(AAAA-MM-DD):   ")
+        FechaFin = input("hasta que fecha quieres buscar?(AAAA-MM-DD):   ")
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 2 ' + '='*20)
+        print()
+       
+        CantidadObras=controller.obrasCronologicoacq(catalog,FechaInicial,FechaFin,catalog)
+        
+        printObrasCronoacq(CantidadObras)
+        printEspacio()
+
+
+    
 
     elif int(inputs[0])==6: 
         nombre = input("Qué artista desea consultar ?: ")

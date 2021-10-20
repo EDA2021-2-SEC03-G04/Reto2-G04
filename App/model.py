@@ -25,7 +25,7 @@
  """
 
 
-from DISClib.DataStructures.arraylist import addLast
+from DISClib.DataStructures.arraylist import addLast, newList
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -35,6 +35,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as mrgsort
 assert cf
 import datetime
+import itertools
 import time
 
 
@@ -51,7 +52,7 @@ def newCatalog(datatype):
     todas las obras, adicionalmente, crea una lista vacia para los artistas.Retorna el catalogo inicializado.
     """
 
-    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None,'nationalityartworks':None}
+    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None,'nationalityartworks':None,'artworksIDSingleArtist':None,'artworksDateAcqYearMonth':None}
 
     catalog['artworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -85,6 +86,11 @@ def newCatalog(datatype):
                                    loadfactor=4.0,
                                    comparefunction=None)
     
+    catalog['artworksDateAcqYearMonth']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    
     
 
     return catalog
@@ -99,6 +105,8 @@ def addArtwork(catalog,artwork):
     artwork['Height (cm)'],artwork['Length (cm)'],artwork['Weight (kg)'],artwork['Width (cm)'])
 
     mp.put(catalog['artworks'], artwork['Title'], new)
+
+    
 
 
     #Crea el diccionario de Obras por nacionalidad
@@ -154,14 +162,12 @@ def addArtwork(catalog,artwork):
     Iden = Iden.split(',')
 
     #Crea un diccionario con las llaves del ID de artistas y con value todas las obras en la que ese artista participa
-    i=0
+   
     for ArtistID in Iden: 
-        #print(Iden)
-        #print(ArtistID)
-        i=i+1
+        
+        
         if mp.contains(catalog['artworksIDSingleArtist'],ArtistID): 
             listavieja2=mp.get(catalog['artworksIDSingleArtist'],ArtistID)
-            #print(type(listavieja2['value']))
             lt.addLast(listavieja2['value'],new)
             mp.put(catalog['artworksIDSingleArtist'],ArtistID,listavieja2['value'])
             
@@ -170,13 +176,28 @@ def addArtwork(catalog,artwork):
     
         else: 
             lista2=lt.newList()
-            #print(type(lista2))
             lt.addLast(lista2,new)
             mp.put(catalog['artworksIDSingleArtist'],ArtistID,lista2)
-            #print(lista)
-            #print(type(lista2))
-            #print(i)
             
+    
+    #Crea un diccionario con las llaver del date Acquired Año-Mes (una lista de todas las obras de esta fecha dentro de cada llave):
+    Year=artwork['DateAcquired'].year
+    Month=artwork['DateAcquired'].month
+    ShortDate=str(Year)+'-'+str(Month)
+
+    if mp.contains(catalog['artworksDateAcqYearMonth'],ShortDate):
+        listavieja3=mp.get(catalog['artworksDateAcqYearMonth'],ShortDate)
+        lt.addLast(listavieja3['value'],new)
+        mp.put(catalog['artworksDateAcqYearMonth'],ShortDate,listavieja3['value'])
+
+    else: 
+        lista3=lt.newList()
+        lt.addLast(lista3,new)
+        mp.put(catalog['artworksDateAcqYearMonth'],ShortDate,lista3)
+            
+
+
+
 
 
 
@@ -324,6 +345,61 @@ def artistasCronologico(lista, inicio, final):
 
     return retorno
 
+def obrasCronologicoacq(lista,inicio,final,catalog): 
+    YearInit=inicio.year
+    MonthInit=inicio.month
+
+    FechaInit=str(YearInit)+'-'+str(MonthInit)
+
+    YearFinal=final.year
+    MonthFinal=final.month
+
+    FechaFinal=str(YearFinal)+'-'+str(MonthFinal)
+
+    ObrasAux=[]
+    for año in range(YearInit,YearFinal+1):
+        for mes in range(MonthInit,MonthFinal+1): 
+            FechaAux=str(año)+'-'+str(mes)
+            ObrasAuxRango=mp.get(catalog['artworksDateAcqYearMonth'],FechaAux)['value']
+            ObrasAux.append(ObrasAuxRango)
+    
+    ObrasAuxflat = list(itertools.chain(*ObrasAux))
+
+    mrgsort.sort(ObrasAuxflat, cmpArtworkByDateAcquired)
+
+
+
+    for Obra in ObrasAuxflat:
+
+
+        FechaReal=Obra['dateacquired']
+        name = Obra["name"]
+        medium = Obra["medium"]
+        dimensions = Obra["dimensions"]
+        constid=Obra['constituentid']
+        creditline=Obra['creditline']
+
+        
+
+        if  FechaReal >= inicio and dateacquired <= final: 
+
+        
+
+        
+
+
+
+        
+
+
+    
+
+        
+
+
+
+
+
 def ObrasArtista(catalog,nombre): 
 
     #Saca los indices de artistas y artistsID
@@ -456,3 +532,12 @@ def compArtistasByBegindate(art1, art2):
     compara artistas por su fecha de nacmiento 
     """
     return art1["edad"] < art2["edad"]
+
+def cmpArtworkByDateAcquired(artwork1,artwork2): 
+    """
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork2
+    Args:
+    artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'
+    artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
+    """
+    return artwork1['dateacquired']<artwork2['dateacquired']

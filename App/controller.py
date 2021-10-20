@@ -88,6 +88,25 @@ def ObrasPorNacionalidad(nacionalidad,catalog):
 
    return model.ObrasPorNacionalidad(nacionalidad,catalog)
 
+def obrasCronologicoacq(lista,inicio,final,catalog):
+    """
+    Retorna las obras adquiridas enre las dos fechas utilizando el algoritmo de ordenamiento metodo
+    """
+    if inicio:
+        datelst=inicio.split('-')
+        inicio2=datetime.date(int(datelst[0]),int(datelst[1]),int(datelst[2]))
+    else:
+        print('ERROR, INGRESE UN FORMATO DE FECHA INICIAL ADECUADO')
+    
+    if final:
+        datelst2=final.split('-')
+        final2=datetime.date(int(datelst2[0]),int(datelst2[1]),int(datelst2[2]))
+    else:
+        print('ERROR, INGRESE UN FORMATO DE FECHA FINAL ADECUADO')
+    
+    ObrasCrono=model.obrasCronologicoacq(lista,inicio2,final2)
+    return ObrasCrono
+
 
 # Funciones de consulta sobre el catálogo
 
