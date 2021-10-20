@@ -52,7 +52,7 @@ def newCatalog(datatype):
     todas las obras, adicionalmente, crea una lista vacia para los artistas.Retorna el catalogo inicializado.
     """
 
-    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None,'nationalityartworks':None,'artworksIDSingleArtist':None,'artworksDateAcqYearMonth':None}
+    catalog={'artworks': None, 'artists': None, "artistID" : None, 'nationality': None,'medium':None,'nationalityartworks':None,'artworksIDSingleArtist':None,'artworksDateAcqYearMonth':None,'artworksbyDepartment':None}
 
     catalog['artworks']=mp.newMap(10000,
                                    maptype='CHAINING',
@@ -91,6 +91,11 @@ def newCatalog(datatype):
                                    loadfactor=4.0,
                                    comparefunction=None)
     
+    catalog['artworksbyDepartment']=mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    
     
 
     return catalog
@@ -105,6 +110,7 @@ def addArtwork(catalog,artwork):
     artwork['Height (cm)'],artwork['Length (cm)'],artwork['Weight (kg)'],artwork['Width (cm)'])
 
     mp.put(catalog['artworks'], artwork['Title'], new)
+    
 
     
 
@@ -181,20 +187,52 @@ def addArtwork(catalog,artwork):
             
     
     #Crea un diccionario con las llaver del date Acquired Año-Mes (una lista de todas las obras de esta fecha dentro de cada llave):
-    Year= None #artwork['DateAcquired'].year
-    Month=None #artwork['DateAcquired'].month
-    ShortDate=None #str(Year)+'-'+str(Month)
+    dateacquiredstr=artwork['DateAcquired']
+
+    if dateacquiredstr:
+        datelst=dateacquiredstr.split('-')
+        dateacquired2=datetime.date(int(datelst[0]),int(datelst[1]),int(datelst[2]))
+    else:
+        dateacquired2=datetime.date.today()
+
+    Year=dateacquired2.year
+    Month=dateacquired2.month
+    ShortDate=str(Year)+'-'+str(Month)
 
     if mp.contains(catalog['artworksDateAcqYearMonth'],ShortDate):
         listavieja3=mp.get(catalog['artworksDateAcqYearMonth'],ShortDate)
-        lt.addLast(listavieja3['value'],new)
+        #lt.addLast(listavieja3['value'],new)
+        listavieja3['value'].append(new)
         mp.put(catalog['artworksDateAcqYearMonth'],ShortDate,listavieja3['value'])
 
     else: 
-        lista3=lt.newList()
-        lt.addLast(lista3,new)
+        #lista3=lt.newList()
+        lista3=[]
+        #lt.addLast(lista3,new)
+        lista3.append(new)
         mp.put(catalog['artworksDateAcqYearMonth'],ShortDate,lista3)
-            
+
+
+
+    #Crea un diccionario con las llaves del Departamaneto con value (una lista de todas las obras de este departamento):
+    Department=artwork['Department']
+    
+
+    if mp.contains(catalog['artworksbyDepartment'],Department):
+        listavieja4=mp.get(catalog['artworksbyDepartment'],Department)
+        lt.addLast(listavieja4['value'],new)
+        #listavieja4['value'].append(new)
+        mp.put(catalog['artworksbyDepartment'],Department,listavieja4['value'])
+
+    else: 
+        lista4=lt.newList()
+        #lista4=[]
+        lt.addLast(lista4,new)
+        #lista4.append(new)
+        mp.put(catalog['artworksbyDepartment'],Department,lista4)
+
+    
+                
 
 
 
@@ -344,9 +382,11 @@ def artistasCronologico(lista, inicio, final):
     mrgsort.sort(retorno, compArtistasByBegindate)
 
     return retorno
+def obrasCronologicoacq(inicio,final,catalog):
+    
+    
 
-def obrasCronologicoacq(inicio,final,catalog): 
-
+    Artistas=catalog['artistID']
     YearInit=inicio.year
     MonthInit=inicio.month
 
@@ -361,12 +401,30 @@ def obrasCronologicoacq(inicio,final,catalog):
     for año in range(YearInit,YearFinal+1):
         for mes in range(MonthInit,MonthFinal+1): 
             FechaAux=str(año)+'-'+str(mes)
-            ObrasAuxRango=mp.get(catalog['artworksDateAcqYearMonth'],FechaAux)['value']
-            ObrasAux.append(ObrasAuxRango)
-    
+            if mp.contains(catalog['artworksDateAcqYearMonth'],FechaAux):
+                ObrasAuxRango=mp.get(catalog['artworksDateAcqYearMonth'],FechaAux)['value']
+                ObrasAux.append(ObrasAuxRango)
+            
+
+        
     ObrasAuxflat = list(itertools.chain(*ObrasAux))
 
-    mrgsort.sort(ObrasAuxflat, cmpArtworkByDateAcquired)
+    ObrasAuxflat2=lt.newList()
+
+    for Obra in ObrasAuxflat[::-1]: 
+        #print(Obra)
+        lt.addLast(ObrasAuxflat2,Obra)
+
+
+
+
+    
+
+    mrgsort.sort(ObrasAuxflat2, cmpArtworkByDateAcquired)
+
+    for i in range(lt.size(ObrasAuxflat2)):
+        Obra=lt.getElement(ObrasAuxflat2,i)
+        ObrasAuxflat[i]=Obra
 
 
 
@@ -376,7 +434,7 @@ def obrasCronologicoacq(inicio,final,catalog):
         FechaReal=Obra['dateacquired']
         
 
-        if  FechaReal <= inicio: 
+        if  FechaReal < inicio: 
             ObrasAuxflat.remove(Obra)
         else: 
             break
@@ -387,10 +445,44 @@ def obrasCronologicoacq(inicio,final,catalog):
         FechaReal=Obra['dateacquired']
         
 
-        if  FechaReal >= final: 
+        if  FechaReal > final: 
             ObrasAuxflat.remove(Obra)
         else: 
             break
+
+    
+    for i in range(3):
+        nombre=''
+        Obra=ObrasAuxflat[i]
+        ConstidObra=Obra['constituentid']
+        ConstidObra=ConstidObra.translate({ord(z): None for z in '[]'})
+        ConstidObra=ConstidObra.split(',')
+        ConstidObra=ConstidObra[0]
+
+        
+        nombree=mp.get(Artistas,ConstidObra)['value']
+        nombre=nombree['name']
+
+        Obra['artistname']=nombre
+        ObrasAuxflat[i]=Obra
+    
+    for i in range(3):
+        l=len(ObrasAuxflat)-(i+1)
+        nombre=''
+        Obra=ObrasAuxflat[l]
+        ConstidObra=Obra['constituentid']
+        ConstidObra=ConstidObra.translate({ord(z): None for z in '[]'})
+        ConstidObra=ConstidObra.split(',')
+        ConstidObra=ConstidObra[0]
+
+        nombree=mp.get(Artistas,ConstidObra)['value']
+        nombre=nombree['name']
+    
+        Obra['artistname']=nombre
+        ObrasAuxflat[l]=Obra
+
+    return ObrasAuxflat
+
 
 def Nacionalidad_obras(catalog):
     """
@@ -412,22 +504,6 @@ def Nacionalidad_obras(catalog):
     return retorno
 
         
-
-
-
-        
-
-        
-
-
-
-        
-
-
-    
-
-        
-
 
 
 
@@ -519,26 +595,63 @@ def ObrasArtista(catalog,nombre):
 
 
 
-   
+def Transporte(catalog,depa): 
 
+    '''
+    Calcula el costo e inforación asociada a transportar un departamento del museo
+    '''
+    #Obtiene las obras del catalogo
+    ObrasTotal=catalog['artworksbyDepartment']
+    ObrasDepto=mp.get(ObrasTotal,depa)['value']
+    #Crea una nueva lista para las obras del departamento a transportar
+    ObrasDepto1=lt.newList()
+    ObrasDepto2=lt.newList()
+    #Acumulación del precio de transporte por obra
+    TotalPrecio=0
+    #Acumulación del peso total de las obras
+    TotalPeso=0
 
+    maxC1=0
+    maxC2=0
+    maxC3=0
+    maxC4=0
+    maxC5=0
+    #Recorre todas las obras del catálogo para ver calcular su precio
+    for i in range(lt.size(ObrasDepto)):
+        print(i)
+        #Obtiene la obra
+        Obra=lt.getElement(ObrasDepto,i)
+        
+        #Función que calcula el costo de transporte de una obra
+        costo=CalcularCosto(Obra)
+        #Función que calcula el peso de una obra
+        peso=CalcularPeso(Obra)
+        #Se le añade el atributo 'costo' a cada obra
+        Obra['cost']=costo
+        #Se acumulan el precio y el peso
+        TotalPrecio+=costo
+        TotalPeso+=peso
+        #Se añade la obra a la lista de obras del departamento buscado 
+        lt.addLast(ObrasDepto1,Obra)
+        lt.addLast(ObrasDepto2,Obra)
 
+        
+        #if costo >maxC1:
+            #elto1=Obra
+           # maxC1=costo
+        #elif 
+        
+        
 
+    #Los ordena de forma DESCENDENTE por fecha en una lista y en la otra por costo de transporte
+    print('sonrting1')
+    mrgsort.sort(ObrasDepto1,compPrecio)
+    print('sorting2')
+    mrgsort.sort(ObrasDepto2,compFecha)
+    #Calcula el total de obras del departamento 
+    TotalObras=lt.size(ObrasDepto1)
 
-
-
-    
-
-
-
-
-
-
-
-
-
-
-    return True
+    return TotalObras, TotalPrecio,TotalPeso,ObrasDepto1, ObrasDepto2
 
 
     
@@ -577,3 +690,60 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
 def compArtwrkByNatio(A1, A2):
 
     return A1[1] > A2[1]
+
+def CalcularCosto(Obra):
+
+    '''
+    Retorna el costo aproximado de transpotar una obra de arte
+    '''
+   
+    depth=Obra['depth']
+    height=Obra['height']
+    weight=Obra['weight']
+    width=Obra['width']
+    precio=0
+    if weight or (height and width) or (height and width and depth):
+        if weight:
+            precio1=float(weight)*72
+            precio=precio1
+        if (height and width):
+            precio2=(float(height)*float(width)*72)/(100**2)
+            precio=max(precio,precio2)
+        
+        if (height and width and depth):
+            precio3=(float(height)*float(width)*float(depth)*72)/(100**3)
+            precio=max(precio,precio3)
+
+        
+
+    else:
+         precio=42
+
+    return precio
+
+def CalcularPeso(Obra): 
+    '''
+    Retorna el peso aproximado de una obra 
+    '''
+    weight=Obra['weight']
+
+    if weight:
+        Peso=float(weight)
+    else:
+        Peso=0
+    return Peso
+
+
+def compPrecio(obra1,obra2):
+    '''
+    Compara por precio de transporte en orden descendente 
+    '''
+    return float(obra1['cost']) > float(obra2["cost"])
+
+def compFecha(obra1,obra2):
+    '''
+    Compara por precio de transporte en orden descendente 
+    '''
+    return int(obra1['date']) < int(obra2["date"])
+
+

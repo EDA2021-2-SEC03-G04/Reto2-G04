@@ -24,6 +24,7 @@ import config as cf
 import model
 import csv
 import time
+import datetime
 
 
 """
@@ -88,7 +89,7 @@ def ObrasPorNacionalidad(nacionalidad,catalog):
 
    return model.ObrasPorNacionalidad(nacionalidad,catalog)
 
-def obrasCronologicoacq(lista,inicio,final,catalog):
+def obrasCronologicoacq(inicio,final,catalog):
     """
     Retorna las obras adquiridas enre las dos fechas utilizando el algoritmo de ordenamiento metodo
     """
@@ -104,7 +105,7 @@ def obrasCronologicoacq(lista,inicio,final,catalog):
     else:
         print('ERROR, INGRESE UN FORMATO DE FECHA FINAL ADECUADO')
     
-    ObrasCrono=model.obrasCronologicoacq(lista,inicio2,final2)
+    ObrasCrono=model.obrasCronologicoacq(inicio2,final2,catalog)
     return ObrasCrono
 
 
@@ -133,3 +134,11 @@ def Nacionalidad_obras(catalog):
     """
     lista = model.Nacionalidad_obras(catalog)
     return lista
+
+def Transporte(catalog,depa):
+    """
+    Retorna el total de obras a transportar, el precio, el peso, las 5 obras más costosas y las 5 más antiguas
+
+    """
+    res=model.Transporte(catalog,depa)
+    return res

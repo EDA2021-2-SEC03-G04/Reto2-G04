@@ -47,6 +47,8 @@ def printMenu():
     print('5-(REQ 2) Listar cronológicamente las adquisiciones')
     print('6-(REQ 3) Clasificar las obras de un artista por técnica')
     print("7-(REQ 4) Clasificacion de obras por nacionalidad de sus creadores")
+    print("8-(REQ 5) Transportar obras de un departamento")
+
 
 def printEspacio():
     """
@@ -100,28 +102,29 @@ def printArtistasCrono(lista):
         print(str(x+1) + ") El artista: " + elemento["nombre"] + " nacido en: " + str(elemento["edad"]) + " de nacionalidad: " + elemento["nacionalidad"] + " y de genero: " +  elemento["genero"])
 
 
-
 def printObrasCronoacq(lista):
     """
     imprime la cantidad de obras adquiridas en un rango de años
     """
-    cantidad = lt.size(lista)
+    cantidad = len(lista)
     
     print("Hay " + str(cantidad) + " obras adquiridas en el rago seleccioando")
     print()
-    print("Top 3 mas jovenes: ")
+
+    
+    print("Top 3 mas viejos: ")
     print()
     for x in range(3):
-        elemento = lt.getElement(lista, x)
+        elemento = lista[x]
         print(str(x+1) + ") la obra: " + elemento["name"] + " adquirida en : " + str(elemento["dateacquired"]) + " con medio: " + elemento["medium"] + " y de dimensiones: " +  elemento["dimensions"] +' creada por: ' + str(elemento['artistname']))
         
 
     print()
-    print("Top 3 mas viejos: ")
+    print("Top 3 mas jóvenes: ")
     print()
     for x in range(3):
-        elemento = lt.getElement(lista, cantidad-x)
-        print(str(x+1) + ") la obra: " + elemento["name"] + " adquirida en : " + str(elemento["dateacquired"]) + " con medio: " + elemento["medium"] + " y de dimensiones: " +  elemento["dimensions"]+ 'creada por: ' + str(elemento['artistname']))
+        elemento2 = lista[-(x+1)]
+        print(str(x+1) + ") la obra: " + elemento2["name"] + " adquirida en : " + str(elemento2["dateacquired"]) + " con medio: " + elemento2["medium"] + " y de dimensiones: " +  elemento2["dimensions"]+ 'creada por: ' + str(elemento2['artistname']))
 
 
 
@@ -177,6 +180,27 @@ def Print_nacionalidad_obras(lista):
         print(str(cant - x) + ' )' + " La obra de titulo " + obra["name"] + " Hecha en " + str(obra["date"]) + " Con el medio " + obra["medium"] + "Con dimensiones" + obra["dimensions"])
         
 
+    printEspacio()
+
+def printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, TransportePorFecha): 
+    
+    print('Hay un total de : ' + str(TotalObras) + ' obras por transportarse, con un precio total de transporte de: ' + str(TotalPrecio) + ' USD, por un peso de: ' + str(TotalPeso) + 'kg')
+    print( )
+    print('Las 5 obras más costosas por transportar son: ')
+    print()
+    for i in range(5):
+        elemento=lt.getElement(TransportePorCosto,i)
+        print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + ', técnica : ' + str(elemento['medium'])+'y costo de transporte aprox: ' + str(round(elemento['cost']))+' USD' + ' de los artistas con ID : ' + str(elemento['constituentid']))
+
+    print()
+    print()
+
+    print('Las 5 obras más antiguas para transportarse son: ')
+    print()
+    for i in range(5):
+        elemento=lt.getElement(TransportePorFecha,i)
+        print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + ', técnica : ' + str(elemento['medium'])+'y costo de transporte aprox: ' + str(round(elemento['cost']))+' USD' + + ' de los artistas con ID : ' + str(elemento['constituentid']))
+    print()
     printEspacio()
 
 
@@ -257,11 +281,10 @@ while True:
         print('='*20 + ' RESPUESTA REQ 2 ' + '='*20)
         print()
        
-        CantidadObras=controller.obrasCronologicoacq(catalog,FechaInicial,FechaFin,catalog)
+        CantidadObras=controller.obrasCronologicoacq(FechaInicial,FechaFin,catalog)
         
         printObrasCronoacq(CantidadObras)
         printEspacio()
-
 
     
 
@@ -289,7 +312,18 @@ while True:
         print('='*20 + ' RESPUESTA REQ 4 ' + '='*20)
         print()
         Print_nacionalidad_obras(Nacionalidad_obras)
+
+
+    elif int(inputs[0]) == 8:
+        depa = input("Que departamento deseas transportar?: ")
+        
+        TotalObras, TotalPrecio,TotalPeso, TransportePorCosto, TransportePorFecha=controller.Transporte(catalog,depa)
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 5 ' + '='*20)
+        print()
        
+        printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, TransportePorFecha)  
         
     else:
         sys.exit(0)
