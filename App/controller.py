@@ -142,3 +142,11 @@ def Transporte(catalog,depa):
     """
     res=model.Transporte(catalog,depa)
     return res
+
+def artistasPro(catalog, inicio, fin, top):
+    """
+    artistas mas prolificos segun el top
+    """
+
+    top = model.artistasPro(catalog, inicio, fin, top)
+    return top

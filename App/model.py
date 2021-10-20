@@ -358,6 +358,7 @@ def artistasCronologico(lista, inicio, final):
     Retorna una lista con los artistas ordenados por epoca
     """
 
+    # Se abre el mapa necesario y se crea la lista de retorno
     artistas = lista["artists"]
     llaves = mp.keySet(artistas)
     retorno = lt.newList()
@@ -365,12 +366,15 @@ def artistasCronologico(lista, inicio, final):
 
     for x in range(lt.size(llaves)):
 
+        #por cada artista se revisa si su fecha de nacimiento esta dentro de los parametros
         grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
         edad = int(grupo["begindate"])
         
 
         if edad != 0 and edad != None and edad >= inicio and edad <= final:
 
+
+            #se saca la info del artista y se añade a la lista de retorno
             nombre = grupo["name"]
             muerte = int(grupo["enddate"])
             genero = grupo["gender"]
@@ -379,6 +383,7 @@ def artistasCronologico(lista, inicio, final):
             agregar = {"nombre" : nombre, "edad" : edad, "muerte" : muerte, "genero" : genero, "nacionalidad" : nacionalidad}
             lt.addLast(retorno, agregar)
     
+    #se ordena la lista
     mrgsort.sort(retorno, compArtistasByBegindate)
 
     return retorno
@@ -488,6 +493,8 @@ def Nacionalidad_obras(catalog):
     """
     Lista con la nacionalidad
     """
+
+    #se bisca el mapa con nacionalidad - obra
     artistas = catalog["nationalityartworks"]
     llaves = mp.keySet(artistas)
     retorno = lt.newList()
@@ -495,10 +502,11 @@ def Nacionalidad_obras(catalog):
     
     for x in range(lt.size(llaves)):
 
-         
+        #añade a una lista el la nacionalidad y el numero de obras que tiene
         mom = [lt.getElement(llaves, x),int(lt.size(grupo))]
         lt.addLast(retorno, mom)
 
+    #Se ordenan los valores
     mrgsort.sort(retorno, compArtwrkByNatio)
 
     return retorno
@@ -654,7 +662,79 @@ def Transporte(catalog,depa):
     return TotalObras, TotalPrecio,TotalPeso,ObrasDepto1, ObrasDepto2
 
 
+def artistasPro(catalog, inicio, fin, top):
     
+    artistas = catalog["artists"]
+    Obras_por_id = catalog["artworksIDSingleArtist"]
+    llaves = mp.keySet(artistas)
+    retorno = lt.newList()
+    errores = 0
+
+
+    for x in range(lt.size(llaves)):
+
+        #por cada artista se revisa si su fecha de nacimiento esta dentro de los parametros
+        grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
+
+        edad = int(grupo["begindate"])
+        
+
+        if edad != 0 and edad != None and edad >= inicio and edad <= fin:
+
+
+            codigo = grupo["constituentid"]
+            try:
+                obras = mp.get(Obras_por_id, codigo)["value"]
+                lt.addLast(retorno, [ lt.getElement(llaves, x), int(lt.size(obras)), codigo])
+            except:
+                errores += 1
+
+    mrgsort.sort(retorno, compArtsOrbas)
+    top_Li = lt.newList()
+
+    cant = 0
+    posiciones = 1
+    while cant < top:
+        mom = lt.getElement(retorno, posiciones)
+        if not lt.isPresent(top_Li, mom):
+            lt.addLast(top_Li, mom)
+            cant +=1
+        posiciones += 1
+
+    top_Li_compl = lt.newList()
+    for x in range(lt.size(top_Li)):
+
+        mom = lt.getElement(top_Li, x)
+        grupos = mp.get(Obras_por_id, mom[2])["value"]
+        espacio = lt.newList()
+
+        for y in range(lt.size(grupos)):
+
+            obra = lt.getElement(grupos, y)
+            medio = obra["medium"]
+
+            try:
+
+                if lt.isPresent(espacio, medio):
+
+                    posi = lt.isPresent(espacio, medio) + 1
+                    val = lt.getElement(espacio, posi) + 1
+                    lt.changeInfo(espacio, posi, val)
+                else:
+                    lt.addLast(espacio, medio)
+                    lt.addLast(espacio, 1)
+            except:
+                errores += 1
+                
+        
+        mom.append(espacio)
+        lt.addLast(top_Li_compl, mom)
+
+
+
+
+
+    return top_Li_compl
 
 
 
@@ -688,7 +768,9 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
     return artwork1['dateacquired']<artwork2['dateacquired']
 
 def compArtwrkByNatio(A1, A2):
-
+    """
+    compara la cantidad de obras en una nacionalidad
+    """
     return A1[1] > A2[1]
 
 def CalcularCosto(Obra):
@@ -745,5 +827,11 @@ def compFecha(obra1,obra2):
     Compara por precio de transporte en orden descendente 
     '''
     return int(obra1['date']) < int(obra2["date"])
+
+def compArtsOrbas(A1, A2):
+    """
+    compara la cantidad de obras de un artista
+    """
+    return A1[1] > A2[1]
 
 

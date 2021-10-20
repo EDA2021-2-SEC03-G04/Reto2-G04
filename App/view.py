@@ -48,6 +48,7 @@ def printMenu():
     print('6-(REQ 3) Clasificar las obras de un artista por técnica')
     print("7-(REQ 4) Clasificacion de obras por nacionalidad de sus creadores")
     print("8-(REQ 5) Transportar obras de un departamento")
+    print("9-(REQ 6) Artista mas prolifico")
 
 
 def printEspacio():
@@ -203,6 +204,17 @@ def printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, 
     print()
     printEspacio()
 
+def Print_ArtistasPro(lista):
+    printEspacio()
+    print("Lista de artistas con mas obras: ")
+    
+    for x in range(lt.size(lista)):
+        mom = lt.getElement(lista,x)
+        print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " y lista de tecnicas " + str(mom[3]))
+
+
+    printEspacio()
+
 
 # carga de datos
 
@@ -323,7 +335,21 @@ while True:
         print('='*20 + ' RESPUESTA REQ 5 ' + '='*20)
         print()
        
-        printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, TransportePorFecha)  
+        printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, TransportePorFecha) 
+
+    elif int(inputs[0]) == 9:
+        print()
+        print("Cargando...")
+        Año_inicial = int(input("Desde que año quieres buscar?:  "))
+        Año_fin = int(input("Hasta que año quieres buscar?:  "))
+        Top = int(input("Cuantos artistas quieres ver en el top?:  "))
+        
+        Lista_artistas = controller.artistasPro(catalog, Año_inicial, Año_fin, Top)
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 6 ' + '='*20)
+        print()
+        Print_ArtistasPro(Lista_artistas) 
         
     else:
         sys.exit(0)
