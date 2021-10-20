@@ -181,9 +181,9 @@ def addArtwork(catalog,artwork):
             
     
     #Crea un diccionario con las llaver del date Acquired Año-Mes (una lista de todas las obras de esta fecha dentro de cada llave):
-    Year=artwork['DateAcquired'].year
-    Month=artwork['DateAcquired'].month
-    ShortDate=str(Year)+'-'+str(Month)
+    Year= None #artwork['DateAcquired'].year
+    Month=None #artwork['DateAcquired'].month
+    ShortDate=None #str(Year)+'-'+str(Month)
 
     if mp.contains(catalog['artworksDateAcqYearMonth'],ShortDate):
         listavieja3=mp.get(catalog['artworksDateAcqYearMonth'],ShortDate)
@@ -391,7 +391,33 @@ def obrasCronologicoacq(inicio,final,catalog):
             ObrasAuxflat.remove(Obra)
         else: 
             break
+
+def Nacionalidad_obras(catalog):
+    """
+    Lista con la nacionalidad
+    """
+    artistas = catalog["nationalityartworks"]
+    llaves = mp.keySet(artistas)
+    retorno = lt.newList()
+    mas = None
+    cant = 0
+
     
+    for x in range(lt.size(llaves)):
+
+        grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
+        lt.addLast(retorno, lt.getElement(llaves, x))
+        lt.addLast(retorno, lt.size(grupo))
+        if lt.size(grupo) > cant:
+            mas = lt.getElement(llaves, x)
+            cant = lt.size(grupo)
+
+    lt.addLast(retorno, mas)        
+
+        
+
+
+    return retorno
 
         
 

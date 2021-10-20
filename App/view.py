@@ -44,8 +44,9 @@ def printMenu():
     print("2- Mostrar n obras más antiguas para un medio específico")
     print('3- Buscar la cantidad de obras de una nacionalidad')
     print('4-(REQ1) Listar cronológicamente los artistas')
-    print('5- Listar cronológicamente las adquisiciones')
-    print('6- Clasificar las obras de un artista por técnica')
+    print('5-(REQ 2) Listar cronológicamente las adquisiciones')
+    print('6-(REQ 3) Clasificar las obras de un artista por técnica')
+    print("7-(REQ 4) Clasificacion de obras por nacionalidad de sus creadores")
 
 def printEspacio():
     """
@@ -150,6 +151,13 @@ def printObrasPorTecnica(TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTe
         print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + 'y técnica : ' + str(elemento['medium']))
     printEspacio()
 
+def Print_nacionalidad_obras(lista):
+    printEspacio()
+    print(lista)
+    print()
+    print(lt.lastElement(lista))
+    printEspacio()
+
 
 # carga de datos
 
@@ -247,6 +255,19 @@ while True:
         print()
         
         printObrasPorTecnica(TotalObras,TotalTecincas,TecnicaMasUsada,ObrasArtistaTecnica,nombre,ObrasArtistaTecnica2)
+
+
+
+    elif int(inputs[0]) == 7:
+        print()
+        print("Cargando...")
+        
+        Nacionalidad_obras = controller.Nacionalidad_obras(catalog)
+        print()
+        
+        print('='*20 + ' RESPUESTA REQ 4 ' + '='*20)
+        print()
+        Print_nacionalidad_obras(Nacionalidad_obras)
        
         
     else:
