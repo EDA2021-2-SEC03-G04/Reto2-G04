@@ -399,23 +399,15 @@ def Nacionalidad_obras(catalog):
     artistas = catalog["nationalityartworks"]
     llaves = mp.keySet(artistas)
     retorno = lt.newList()
-    mas = None
-    cant = 0
 
     
     for x in range(lt.size(llaves)):
 
-        grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
-        lt.addLast(retorno, lt.getElement(llaves, x))
-        lt.addLast(retorno, lt.size(grupo))
-        if lt.size(grupo) > cant:
-            mas = lt.getElement(llaves, x)
-            cant = lt.size(grupo)
+         
+        mom = [lt.getElement(llaves, x),int(lt.size(grupo))]
+        lt.addLast(retorno, mom)
 
-    lt.addLast(retorno, mas)        
-
-        
-
+    mrgsort.sort(retorno, compArtwrkByNatio)
 
     return retorno
 
@@ -581,3 +573,7 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
     artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
     """
     return artwork1['dateacquired']<artwork2['dateacquired']
+
+def compArtwrkByNatio(A1, A2):
+
+    return A1[1] > A2[1]

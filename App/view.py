@@ -153,9 +153,30 @@ def printObrasPorTecnica(TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTe
 
 def Print_nacionalidad_obras(lista):
     printEspacio()
-    print(lista)
+    
+    print("Top 10")
+
+    for x in range(10):
+        print( str(x) + " - " + lt.getElement(lista,x)[0] + " con " + str(lt.getElement(lista,x)[1]))
+
     print()
-    print(lt.lastElement(lista))
+    print("Obras de " + lt.getElement(lista,0)[0])
+    print()
+
+    artistas = catalog["nationalityartworks"]
+    grupo = mp.get(artistas, lt.getElement(lista,0)[0])["value"]
+    cant = lt.size(grupo)
+    for x in range(3):
+        obra = lt.getElement(grupo, x)
+        print(str(x+1) + ' )' + " La obra de titulo " + obra["name"] + " Hecha en " + str(obra["date"]) + " Con el medio " + obra["medium"] + "Con dimensiones" + obra["dimensions"])
+
+    print()
+
+    for x in range(3):
+        obra = lt.getElement(grupo, cant - x)
+        print(str(cant - x) + ' )' + " La obra de titulo " + obra["name"] + " Hecha en " + str(obra["date"]) + " Con el medio " + obra["medium"] + "Con dimensiones" + obra["dimensions"])
+        
+
     printEspacio()
 
 
