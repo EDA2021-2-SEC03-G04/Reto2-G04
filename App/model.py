@@ -345,7 +345,8 @@ def artistasCronologico(lista, inicio, final):
 
     return retorno
 
-def obrasCronologicoacq(lista,inicio,final,catalog): 
+def obrasCronologicoacq(inicio,final,catalog): 
+
     YearInit=inicio.year
     MonthInit=inicio.month
 
@@ -373,15 +374,28 @@ def obrasCronologicoacq(lista,inicio,final,catalog):
 
 
         FechaReal=Obra['dateacquired']
-        name = Obra["name"]
-        medium = Obra["medium"]
-        dimensions = Obra["dimensions"]
-        constid=Obra['constituentid']
-        creditline=Obra['creditline']
+        
+
+        if  FechaReal <= inicio: 
+            ObrasAuxflat.remove(Obra)
+        else: 
+            break
+    
+    
+    for Obra in ObrasAuxflat[::-1]:
+
+        FechaReal=Obra['dateacquired']
+        
+
+        if  FechaReal >= final: 
+            ObrasAuxflat.remove(Obra)
+        else: 
+            break
+    
 
         
 
-        if  FechaReal >= inicio and dateacquired <= final: 
+
 
         
 
