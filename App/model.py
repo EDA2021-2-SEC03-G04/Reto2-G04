@@ -387,16 +387,20 @@ def artistasCronologico(lista, inicio, final):
     mrgsort.sort(retorno, compArtistasByBegindate)
 
     return retorno
-def obrasCronologicoacq(inicio,final,catalog):
-    
-    
 
+def obrasCronologicoacq(inicio,final,catalog):
+    '''
+    Retorna las primeras tres y últimas 3 obras adquiridas en el rango de fechas inicio-final
+    '''
+    
+    #Extrae el map con llaves artistID y values info del artista
     Artistas=catalog['artistID']
+    #Pone las fechas iniciales en formate datetime
     YearInit=inicio.year
     MonthInit=inicio.month
 
     FechaInit=str(YearInit)+'-'+str(MonthInit)
-
+    #Pone las fechas finales en formato datetime
     YearFinal=final.year
     MonthFinal=final.month
 
