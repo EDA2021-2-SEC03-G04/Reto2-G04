@@ -598,11 +598,6 @@ def ObrasArtista(catalog,nombre):
 
     return TotalObras,TotalTecnicas-1,TecnicaMasUsada, ObrasArtistaTecnica,ObrasArtistaTecnica2
 
-
-        
-
-
-
 def Transporte(catalog,depa): 
 
     '''
@@ -619,16 +614,37 @@ def Transporte(catalog,depa):
     #Acumulación del peso total de las obras
     TotalPeso=0
 
-    maxC1=0
-    maxC2=0
-    maxC3=0
-    maxC4=0
-    maxC5=0
+    maxC1=-1
+    maxC2=-1
+    maxC3=-1
+    maxC4=-1
+    maxC5=-1
+
+    eltoC1={'name':'','dateacquired':'','constituentid':'','date':'','medium':'','dimensions':'','department':''
+    ,'creditline':'','classification':'','circumference':'','depth':'','diameter':'','height':'','length':'','weight':'','width':''}
+
+    eltoC2=eltoC3=eltoC4=eltoC5=eltoP1=eltoP2=eltoP3=eltoP4=eltoP5=eltoC1
+
+
+    maxP1=2030
+    maxP2=2030
+    maxP3=2030
+    maxP4=2030
+    maxP5=2030
+
+
     #Recorre todas las obras del catálogo para ver calcular su precio
-    for i in range(lt.size(ObrasDepto)):
-        print(i)
+    for i in range(lt.size(ObrasDepto)-1):
+        
         #Obtiene la obra
-        Obra=lt.getElement(ObrasDepto,i)
+        Obra=lt.getElement(ObrasDepto,i+1)
+
+        fecha=int(Obra['date'])
+
+        if fecha:
+            fecha=int(fecha)
+        else:
+            fecha=2021
         
         #Función que calcula el costo de transporte de una obra
         costo=CalcularCosto(Obra)
@@ -640,26 +656,148 @@ def Transporte(catalog,depa):
         TotalPrecio+=costo
         TotalPeso+=peso
         #Se añade la obra a la lista de obras del departamento buscado 
-        lt.addLast(ObrasDepto1,Obra)
-        lt.addLast(ObrasDepto2,Obra)
-
         
-        #if costo >maxC1:
-            #elto1=Obra
-           # maxC1=costo
-        #elif 
+        if costo>maxC1:
+            eltoC5=eltoC4
+            maxC5=maxC4
+
+            eltoC4=eltoC3
+            maxC4=maxC3
+
+            eltoC3=eltoC2
+            maxC3=maxC2
+
+            eltoC2=eltoC1
+            maxC2=maxC1
+            
+
+            eltoC1=Obra
+            maxC1=costo
+        elif costo>maxC2:
+
+            eltoC5=eltoC4
+            maxC5=maxC4
+
+            eltoC4=eltoC3
+            maxC4=maxC3
+
+            eltoC3=eltoC2
+            maxC3=maxC2
+
+
+
+            eltoC2=Obra
+            maxC2=costo
+        elif costo>maxC3:
+
+            eltoC5=eltoC4
+            maxC5=maxC4
+
+            eltoC4=eltoC3
+            maxC4=maxC3
+
+
+            eltoC3=Obra
+            maxC3=costo
+        elif costo>maxC4:
+            eltoC4=Obra
+            maxC4=costo
+        elif costo>maxC5:
+            eltoC5=Obra
+            maxC5=costo
+
+
+
+
+        if fecha < maxP1:
+
+            eltoP5=eltoP4
+            maxP5=maxP4
+
+            eltoP4=eltoP3
+            maxP4=maxP3
+
+            eltoP3=eltoP2
+            maxP3=maxP2
+
+            eltoP2=eltoP1
+            maxP2=maxP1
+
+
+            eltoP1=Obra
+            maxP1=fecha
+        elif fecha<maxP2:
+            eltoP5=eltoP4
+            maxP5=maxP4
+
+            eltoP4=eltoP3
+            maxP4=maxP3
+
+            eltoP3=eltoP2
+            maxP3=maxP2
+
+
+
+            eltoP2=Obra
+            maxP2=fecha
+        elif fecha<maxP3:
+
+            eltoP5=eltoP4
+            maxP5=maxP4
+
+            eltoP4=eltoP3
+            maxP4=maxP3
+
+
+
+            eltoP3=Obra
+            maxP3=fecha
+        elif fecha<maxP4:
+
+            eltoP5=eltoP4
+            maxP5=maxP4
+
+
+
+            eltoP4=Obra
+            maxP4=fecha
+        elif fecha<maxP5:
+
+            eltoP5=Obra
+            maxP5=fecha
         
         
 
     #Los ordena de forma DESCENDENTE por fecha en una lista y en la otra por costo de transporte
-    print('sonrting1')
-    mrgsort.sort(ObrasDepto1,compPrecio)
-    print('sorting2')
-    mrgsort.sort(ObrasDepto2,compFecha)
+    #print('sonrting1')
+    #mrgsort.sort(ObrasDepto1,compPrecio)
+    #print('sorting2')
+    #mrgsort.sort(ObrasDepto2,compFecha)
     #Calcula el total de obras del departamento 
-    TotalObras=lt.size(ObrasDepto1)
+    #TotalObras=.size(ObrasDepto1)
+    TotalObras=lt.size(ObrasDepto)
+
+    lt.addLast(ObrasDepto1,eltoC1)
+    lt.addLast(ObrasDepto1,eltoC2)
+    lt.addLast(ObrasDepto1,eltoC3)
+    lt.addLast(ObrasDepto1,eltoC4)
+    lt.addLast(ObrasDepto1,eltoC5)
+
+    lt.addLast(ObrasDepto2,eltoP1)
+    lt.addLast(ObrasDepto2,eltoP2)
+    lt.addLast(ObrasDepto2,eltoP3)
+    lt.addLast(ObrasDepto2,eltoP4)
+    lt.addLast(ObrasDepto2,eltoP5)
+
+
 
     return TotalObras, TotalPrecio,TotalPeso,ObrasDepto1, ObrasDepto2
+
+        
+
+
+
+
 
 
 def artistasPro(catalog, inicio, fin, top):

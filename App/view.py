@@ -200,9 +200,11 @@ def printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, 
     print()
     for i in range(5):
         elemento=lt.getElement(TransportePorFecha,i)
-        print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + ', técnica : ' + str(elemento['medium'])+'y costo de transporte aprox: ' + str(round(elemento['cost']))+' USD' + + ' de los artistas con ID : ' + str(elemento['constituentid']))
+        print(str(i+1) + ')' + ' La obra: ' + str(elemento['name']) + '  con fecha : '  + str(elemento['date']) + '   dimensiones : ' + str(elemento['dimensions']) + ', técnica : ' + str(elemento['medium'])+'y costo de transporte aprox: ' + str(round(elemento['cost']))+' USD'  + ' de los artistas con ID : ' + str(elemento['constituentid']))
     print()
     printEspacio()
+
+    
 
 def Print_ArtistasPro(lista):
     printEspacio()
