@@ -288,7 +288,7 @@ while True:
         StopTime=time.process_time()
         TimeMseg=(StopTime-StartTime)*1000
         print()
-        print(f'La carga de datos tardó {TimeMseg} miliseg')
+        print(f'El REQ1 tardó {TimeMseg} miliseg')
 
 
         printEspacio()
@@ -310,7 +310,7 @@ while True:
         StopTime=time.process_time()
         TimeMseg=(StopTime-StartTime)*1000
         print()
-        print(f'La carga de datos tardó {TimeMseg} miliseg')
+        print(f'El REQ2 tardó {TimeMseg} miliseg')
 
         printEspacio()
 
@@ -333,7 +333,8 @@ while True:
         StopTime=time.process_time()
         TimeMseg=(StopTime-StartTime)*1000
         print()
-        print(f'La carga de datos tardó {TimeMseg} miliseg')
+        print(f'El REQ3 tardó {TimeMseg} miliseg')
+        print()
 
 
 
@@ -353,7 +354,8 @@ while True:
         StopTime=time.process_time()
         TimeMseg=(StopTime-StartTime)*1000
         print()
-        print(f'La carga de datos tardó {TimeMseg} miliseg')
+        print(f'El REQ4 tardó {TimeMseg} miliseg')
+        print()
 
 
     elif int(inputs[0]) == 8:
@@ -371,7 +373,8 @@ while True:
         StopTime=time.process_time()
         TimeMseg=(StopTime-StartTime)*1000
         print()
-        print(f'La carga de datos tardó {TimeMseg} miliseg')
+        print(f'El REQ5 tardó {TimeMseg} miliseg')
+        print()
 
     elif int(inputs[0]) == 9:
         print()
