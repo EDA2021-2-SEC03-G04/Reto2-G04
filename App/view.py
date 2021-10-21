@@ -207,10 +207,32 @@ def printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, 
 def Print_ArtistasPro(lista):
     printEspacio()
     print("Lista de artistas con mas obras: ")
+    errores = 0
 
     for x in range(lt.size(lista)):
-        mom = lt.getElement(lista,x)
-        print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " y lista de tecnicas " )#+ str(mom[3]))
+        mom = lt.getElement(lista,x+1)
+        print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " obras y la tecnica mas utilizada es " + str(mom[3][0]) + " con " + str(mom[3][1]))
+
+    ArtistaTop = lt.getElement(lista,1)[2]
+    medio_Top = lt.getElement(lista,1)[3][0]
+    Obras_por_id = catalog["artworksIDSingleArtist"]
+
+    obras = mp.get(Obras_por_id, ArtistaTop)["value"]
+    posicion = 1
+    cantidad = 0
+
+    print()
+    print("top 5 obras de el artista mas prolifico")
+    print()
+
+    while cantidad < 5:
+        obra = lt.getElement(obras, posicion)
+        if obra["medium"] == medio_Top:
+
+            print(str(cantidad + 1) + ')' + " La obra de titulo " + obra["name"] + " Hecha en " + str(obra["date"]) + " y adquirida en " + str(obra["dateacquired"]) + " Con el medio " + obra["medium"] + " Con dimensiones " + obra["dimensions"] + " Con departamento " + obra["department"] + " y con clasificacion " + obra["classification"])
+
+            cantidad += 1
+        posicion +=1
 
 
     printEspacio()

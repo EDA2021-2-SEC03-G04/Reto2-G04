@@ -801,42 +801,47 @@ def artistasPro(catalog, inicio, fin, top):
             cant +=1
         posiciones += 1
 
-    """
+    
     top_Li_compl = lt.newList()
     for x in range(lt.size(top_Li)):
 
-        mom = lt.getElement(top_Li, x)
+        mom = lt.getElement(top_Li, x+1)
         grupos = mp.get(Obras_por_id, mom[2])["value"]
         espacio = lt.newList()
+        presentes = lt.newList()
 
         for y in range(lt.size(grupos)):
 
             obra = lt.getElement(grupos, y)
             medio = obra["medium"]
+            
 
             try:
 
-                if lt.isPresent(espacio, medio):
+                if lt.isPresent(presentes, medio):
 
-                    posi = lt.isPresent(espacio, medio) + 1
-                    val = lt.getElement(espacio, posi) + 1
-                    lt.changeInfo(espacio, posi, val)
+                    posi = lt.isPresent(presentes, medio) 
+                    val = lt.getElement(espacio, posi)[1] + 1
+                    lt.changeInfo(espacio, posi, [medio, val])
                 else:
-                    lt.addLast(espacio, medio)
-                    lt.addLast(espacio, 1)
+                    lt.addLast(espacio, [medio, 1])
+                    lt.addLast(presentes, medio)
             except:
                 errores += 1
                 
-        
-        mom.append(espacio)
+        mrgsort.sort(espacio, compArtMetodos)
+        mejor = lt.getElement(espacio, 1)
+        mom.append(mejor)
         lt.addLast(top_Li_compl, mom)
-    """
+    
+    if lt.getElement(top_Li_compl, 1)[1] == lt.getElement(top_Li_compl, 2)[1]:
+        print("Top 1 y 2 misma cantidad")
+        if lt.getElement(top_Li_compl, 1)[3][1] < lt.getElement(top_Li_compl, 2)[3][1]:
+            lt.exchange(top_Li_compl, 1, 2)
 
-    print(top_Li)
+    
 
-
-
-    return top_Li
+    return top_Li_compl
 
 
 
@@ -936,4 +941,8 @@ def compArtsOrbas(A1, A2):
     """
     return A1[1] > A2[1]
 
-
+def compArtMetodos(A1, A2):
+    """
+    compara la cantidad de obras de un artista
+    """
+    return A1[1] > A2[1]
