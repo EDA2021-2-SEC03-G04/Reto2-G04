@@ -844,6 +844,7 @@ def artistasPro(catalog, inicio, fin, top):
             cant +=1
         posiciones += 1
 
+    """
     top_Li_compl = lt.newList()
     for x in range(lt.size(top_Li)):
 
@@ -872,12 +873,13 @@ def artistasPro(catalog, inicio, fin, top):
         
         mom.append(espacio)
         lt.addLast(top_Li_compl, mom)
+    """
+
+    print(top_Li)
 
 
 
-
-
-    return top_Li_compl
+    return top_Li
 
 
 

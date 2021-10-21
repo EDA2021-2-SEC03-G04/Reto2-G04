@@ -210,7 +210,7 @@ def Print_ArtistasPro(lista):
 
     for x in range(lt.size(lista)):
         mom = lt.getElement(lista,x)
-        print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " y lista de tecnicas " + str(mom[3]))
+        print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " y lista de tecnicas " )#+ str(mom[3]))
 
 
     printEspacio()
