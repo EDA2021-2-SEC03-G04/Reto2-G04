@@ -507,6 +507,7 @@ def Nacionalidad_obras(catalog):
     for x in range(lt.size(llaves)):
 
         #añade a una lista el la nacionalidad y el numero de obras que tiene
+        grupo = mp.get(artistas, lt.getElement(llaves, x))["value"]
         mom = [lt.getElement(llaves, x),int(lt.size(grupo))]
         lt.addLast(retorno, mom)
 

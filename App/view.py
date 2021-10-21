@@ -27,6 +27,7 @@ from DISClib.ADT import list as lt
 from DISClib.DataStructures import mapstructure as ms
 from DISClib.ADT import map as mp
 assert cf
+import time
 
 
 """
@@ -206,7 +207,7 @@ def printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, 
 def Print_ArtistasPro(lista):
     printEspacio()
     print("Lista de artistas con mas obras: ")
-    
+
     for x in range(lt.size(lista)):
         mom = lt.getElement(lista,x)
         print(str(x+1) + ") " + str(mom[0]) + " Con " + str(mom[1]) + " y lista de tecnicas " + str(mom[3]))
@@ -273,7 +274,7 @@ while True:
         Año_inicial = int(input("Desde que año quieres buscar?:  "))
         Año_fin = int(input("Hasta que año quieres buscar?:  "))
         
-        
+        StartTime=time.process_time()
         
         cantidadArtistas = controller.artistasCronologico(catalog, Año_inicial, Año_fin)
         print()
@@ -281,13 +282,23 @@ while True:
         print('='*20 + ' RESPUESTA REQ 1 ' + '='*20)
         print()
         
+
         printArtistasCrono(cantidadArtistas) 
+        
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'La carga de datos tardó {TimeMseg} miliseg')
+
+
         printEspacio()
 
     elif int(inputs[0]) == 5:
         FechaInicial = input("desde que fecha quieres buscar?(AAAA-MM-DD):   ")
         FechaFin = input("hasta que fecha quieres buscar?(AAAA-MM-DD):   ")
         print()
+
+        StartTime=time.process_time()
         
         print('='*20 + ' RESPUESTA REQ 2 ' + '='*20)
         print()
@@ -295,6 +306,12 @@ while True:
         CantidadObras=controller.obrasCronologicoacq(FechaInicial,FechaFin,catalog)
         
         printObrasCronoacq(CantidadObras)
+
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'La carga de datos tardó {TimeMseg} miliseg')
+
         printEspacio()
 
     
@@ -302,6 +319,8 @@ while True:
     elif int(inputs[0])==6: 
         nombre = input("Qué artista desea consultar ?: ")
         print()
+
+        StartTime=time.process_time()
         
         TotalObras,TotalTecincas,TecnicaMasUsada,ObrasArtistaTecnica,ObrasArtistaTecnica2=controller.ObrasArtista(catalog,nombre)
         print()
@@ -311,11 +330,18 @@ while True:
         
         printObrasPorTecnica(TotalObras,TotalTecincas,TecnicaMasUsada,ObrasArtistaTecnica,nombre,ObrasArtistaTecnica2)
 
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'La carga de datos tardó {TimeMseg} miliseg')
+
 
 
     elif int(inputs[0]) == 7:
         print()
         print("Cargando...")
+
+        StartTime=time.process_time()
         
         Nacionalidad_obras = controller.Nacionalidad_obras(catalog)
         print()
@@ -324,9 +350,15 @@ while True:
         print()
         Print_nacionalidad_obras(Nacionalidad_obras)
 
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'La carga de datos tardó {TimeMseg} miliseg')
+
 
     elif int(inputs[0]) == 8:
         depa = input("Que departamento deseas transportar?: ")
+        StartTime=time.process_time()
         
         TotalObras, TotalPrecio,TotalPeso, TransportePorCosto, TransportePorFecha=controller.Transporte(catalog,depa)
         print()
@@ -335,6 +367,11 @@ while True:
         print()
        
         printObrasTransporte(TotalObras, TotalPrecio, TotalPeso,TransportePorCosto, TransportePorFecha) 
+
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'La carga de datos tardó {TimeMseg} miliseg')
 
     elif int(inputs[0]) == 9:
         print()
