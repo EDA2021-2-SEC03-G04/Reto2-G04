@@ -528,38 +528,22 @@ def ObrasArtista(catalog,nombre):
     #Obtiene el constituend ID del artista
     IDArtistamap=mp.get(Artistas,nombre)['value']
     IDArtista=IDArtistamap['constituentid']
-
-    #print(IDArtista)
-
-    #TotalObras,TotalTecnicas,TecnicaMasUsada,ObrasArtistaTecnica=controller.ObrasArtista()
-
+    #Obtiene todas las obras del artista
     Obras=mp.get(catalog['artworksIDSingleArtist'],IDArtista)['value']
-    #print(type(Obras))
-    #print()
-    #print()
-    #print(Obras)
     ObrasLista=Obras
-    #print(type(ObrasLista))
-    #print(ObrasLista)
-    #print()
-    
-
+    #Saca el número total de obras del artista buscado
     TotalObras=len(ObrasLista)
-
-
+    #Crea una lista y un diccionario auxiliares
     ObrasArtistaTecnica=[]
     Tecnicas={}
 
+    #Recorre la lista de obras del artista y va contando las técnicas que tiene
     for i in range(len(ObrasLista)): 
         Obra=lt.getElement(ObrasLista,i)
-        #print(Obra)
-        #print(type(Obra))
-        #print( )
-        #print(Obra.keys())
         TecnicaObra=Obra['medium']
         Tecnicas[TecnicaObra]=Tecnicas.get(i, 0) + 1
         
-    
+    #Saca el total de técnicas del artista y la más usada y cuántas tiene
     TotalTecnicas=len(Tecnicas)
     if TotalTecnicas==0:
         maxim=0
@@ -568,21 +552,12 @@ def ObrasArtista(catalog,nombre):
         maxim=max(Tecnicas.values())
         TecnicaMasUsada=str(list(Tecnicas.keys())[list(Tecnicas.values()).index(maxim)])
 
-    
     #Crea la lista de obras del artista con la técnica más usada
     for i in range(lt.size(ObrasLista)):
         Obra=lt.getElement(ObrasLista,i) 
         if Obra['medium']==TecnicaMasUsada:
             ObrasArtistaTecnica.append(Obra)
-
-
-    #TotalObras=len(list(dict.fromkeys(ObrasLista)))
-    TotalObras=lt.size(ObrasLista)
-    #print('YYYYYY')
-    #print(type(ObrasArtistaTecnica))
-    #ObrasArtistaTecnica2=list(set(ObrasArtistaTecnica))
-
-
+    #Saca los repetidos de la lista
     seen = set()
     ObrasArtistaTecnica2 = []
     for d in ObrasArtistaTecnica:
@@ -592,15 +567,6 @@ def ObrasArtista(catalog,nombre):
             ObrasArtistaTecnica2.append(d)
 
     
-
-   # print(ObrasArtistaTecnica)
-    #print(type(ObrasArtistaTecnica))
-    #print('AAAAAAAAAA POR QUÉ NO FUNCIONA')
-    
-
-    
-
-
     return TotalObras,TotalTecnicas-1,TecnicaMasUsada, ObrasArtistaTecnica,ObrasArtistaTecnica2
 
 def Transporte(catalog,depa): 
@@ -618,7 +584,7 @@ def Transporte(catalog,depa):
     TotalPrecio=0
     #Acumulación del peso total de las obras
     TotalPeso=0
-
+    #Iniciliza los precios máximos y sus correspondientes obras y las fechas mínimas con sus correspondientes obras
     maxC1=-1
     maxC2=-1
     maxC3=-1
@@ -643,7 +609,7 @@ def Transporte(catalog,depa):
         
         #Obtiene la obra
         Obra=lt.getElement(ObrasDepto,i+1)
-
+        #Obtiene la fecha de la obra
         fecha=int(Obra['date'])
 
         if fecha:
@@ -660,8 +626,8 @@ def Transporte(catalog,depa):
         #Se acumulan el precio y el peso
         TotalPrecio+=costo
         TotalPeso+=peso
-        #Se añade la obra a la lista de obras del departamento buscado 
         
+        #Se van actualizando las obras con precio máximo y las obras con fecha mínima
         if costo>maxC1:
             eltoC5=eltoC4
             maxC5=maxC4
@@ -678,6 +644,7 @@ def Transporte(catalog,depa):
 
             eltoC1=Obra
             maxC1=costo
+       
         elif costo>maxC2:
 
             eltoC5=eltoC4
@@ -770,18 +737,11 @@ def Transporte(catalog,depa):
 
             eltoP5=Obra
             maxP5=fecha
-        
-        
-
-    #Los ordena de forma DESCENDENTE por fecha en una lista y en la otra por costo de transporte
-    #print('sonrting1')
-    #mrgsort.sort(ObrasDepto1,compPrecio)
-    #print('sorting2')
-    #mrgsort.sort(ObrasDepto2,compFecha)
-    #Calcula el total de obras del departamento 
-    #TotalObras=.size(ObrasDepto1)
+    
+    #Se calcula el total de obras del departamento
     TotalObras=lt.size(ObrasDepto)
 
+    #Se guardan en listas las obras con precio máximo y las obras con fecha mínima
     lt.addLast(ObrasDepto1,eltoC1)
     lt.addLast(ObrasDepto1,eltoC2)
     lt.addLast(ObrasDepto1,eltoC3)
@@ -794,10 +754,7 @@ def Transporte(catalog,depa):
     lt.addLast(ObrasDepto2,eltoP4)
     lt.addLast(ObrasDepto2,eltoP5)
 
-
-
     return TotalObras, TotalPrecio,TotalPeso,ObrasDepto1, ObrasDepto2
-
         
 
 
